@@ -1,0 +1,65 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+|                    Project Documentation                |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                   -***Objective***-
+
+
+The system-wide file encryption system implemented for this project
+include an addition of two system calls under Minix 3's VFS. There 
+are also numerous "helper" or "private" functions that are called
+by these two system calls in order to perform file encryption and
+decryption. The system utility setEncrypt is responsible for encrypting
+and decrypting any file on the file system. (for details, see the man
+page for setEncrypt). Set encrypt works hand in hand with the two
+system calls. All the actual encryption and the critical parts of 
+the process are done inside the kernel space––the setEncrypt utility
+merely combines these functions for convenient encryption and decryption.
+
+                   -***Implementation***-
+
+1) Firstly declare two library procedure inside the file /usr/src/include/unistd.h.
+
+   ******************************************
+   int myencrypt (int, const char *, char *);
+   ******************************************
+
+
+2) Now declare the definition of the function in the file myencrypt.h which is to created inside the 
+directory of /usr/src/include
+
+
+
+3) Now assign call number to the system call in the file /usr/src/include/minix/callnr.h
+
+    **********************
+    # define MYENCRYPT 70
+    **********************
+
+
+4) Now register the system call in /usr/src/servers/pm/proto.h
+
+   ******************************
+   int do_myencrypt(void);
+   ******************************
+
+5) Also register it in /usr/src/servers/pm/table.c
+
+   ***********************************************
+   int do_myencrypt,	/* 70 = unused	*/
+   ***********************************************
+
+6) Now to handle the system call, include the definition in /usr/src/servers/vfs/protect.c
+
+
+Here is where the actual file encryption and decryption take place. The 
+do_myencrypt() is in charge of manipulating the records in the encrypted table 
+file (see below). It adds, disables, replaces, and verifies records, encrypting
+them before writing them to disk. This ensures that no lurker can access the records
+contained in the file. It then simply encrypts or decrypts
+the buffer from user space and sends it back by copying the processed buffer back
+to user space. In order to access all the constants, encrypt.h (see below) is 
+included in this file.
+
+
+7) Created a 'c' program to test encryption program 

@@ -1,0 +1,47 @@
+.\" Tushar Sharma
+.\"
+.TH MYENCRYPT 2 "April 26, 23:13"
+.UC
+.SH NAME
+MYENCRYPT \- Encryption the file
+.SH SYNOPSIS
+.nf
+.ft B
+#include "myencrypt.h"
+
+int myencrypt(const char*, char const *, char const *)
+.ft R
+.fi
+.SH DESCRIPTION
+.de SP
+.if t .sp 0.4
+.if n .sp
+..
+.B MYENCRYPT
+It is used to encrypt the file with caesar cipher. 
+
+.SH OPTIONS
+First argument is the file name to be encrypted. Second parameter is the read or write permission. Third parameter is password to 
+be used to encrypt file.
+.RE
+.SH "RETURN VALUE
+Upon successful completion, \fBmyencrypt\fP returns a positive value
+to the calling process 
+Otherwise, a value of \-1 is returned
+to the calling process, no operation is performed.
+.SH ERRORS
+.B MYENCRYPT
+will fail and no operation would be performed if
+followings are true:
+.TP 15
+[EAGAIN]
+The system-imposed limit on the total
+number of processes under execution would be exceeded.
+This limit is configuration-dependent.
+(The kernel variable NR_PROCS in <minix/config.h> (Minix), or
+<minix/const.h> (Minix-vmd).)
+.TP 15
+[ENOMEM]
+There is insufficient (virtual) memory for the new process.
+.SH "SEE ALSO"
+.BR fopen (2)
